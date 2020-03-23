@@ -69,13 +69,24 @@ class World:
     
     def world(self):
         return self.space
-
+        
 clients = list()
-myWorld = World()        
+myWorld = World()    
+
+def send_all(msg):
+    for client in clients:
+        client.put( msg )
+
+def send_all_json(obj):
+    send_all( json.dumps(obj) )
+    
 
 def set_listener( entity, data ):
     ''' do something with the update ! '''
-
+    # msg = dict()
+    # msg[entity] = data
+    # send_all_json(msg)
+    
 myWorld.add_set_listener( set_listener )
         
 @app.route('/')
@@ -92,13 +103,11 @@ def read_ws(ws,client):
             print("WS RECV: %s" % msg)
             if (msg is not None):
                 packet = json.loads(msg)
-                for entity in packet:
-                    myWorld.set(entity, packet[entity])
+                send_all_json(packet)
             else:
                 break
     except Exception as e:
         print(e)
-        '''Done'''
 
 @sockets.route('/subscribe')
 def subscribe_socket(ws):
@@ -135,11 +144,14 @@ def flask_post_json():
 @app.route("/entity/<entity>", methods=['POST','PUT'])
 def update(entity):
     '''update the entities via this interface'''
-    i = 0
-    while i < len(flask_post_json()):
-        myWorld.update(entity, flask_post_json().keys()[i], flask_post_json().values()[i])
-        i += 1
+    data = flask_post_json()
+    for key in data:
+        myWorld.update(entity,key,data[key])
     return json.dumps(myWorld.get(entity))
+
+
+
+
 @app.route("/world", methods=['POST','GET'])    
 def world():
     '''you should probably return the world here'''
@@ -154,8 +166,8 @@ def get_entity(entity):
 
 @app.route("/clear", methods=['POST','GET'])
 def clear():
-    '''Clear the world out!'''
-    return None
+    myWorld.clear()
+    return json.dumps(myWorld.world())
 
 
 

@@ -1,13 +1,13 @@
 * Explore using Websockets to make a shared state interactive application
 ** Description
 
-   Your task is to fill in the blanks and connect your browser to your
-   webservice via Websockets. We won't be using XML here. I recommend JSON.
+    Your task is to fill in the blanks and connect your browser to your
+    webservice via Websockets. We won't be using XML here. I recommend JSON.
 
-   Your task is to get this shared drawing program to work using Websockets.
+    Your task is to get this shared drawing program to work using Websockets.
 
-   This program allows numerous clients to connect and draw on the
-   same surface and share the drawing they have made with anyone who
+    This program allows numerous clients to connect and draw on the
+    same surface and share the drawing they have made with anyone who
    is currently on.
 
    The goal here is for you to understand the very basics of Websockets,
